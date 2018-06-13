@@ -270,13 +270,20 @@ write.csv(Q1_results, "../Results/Q1_results.csv")
 
 
 ##############################
-# Make interaction plot (Figure ?? in paper)
+# Make interaction plot (Figure 3)
 
-grayscale <- colorRampPalette(c("light gray",  "black"))
-color_var = sitedata$had_pptmean
-max_col = 100
-cols = (color_var - min(color_var)) * (99/ (max(color_var) - min(color_var))) + 1
-palette(grayscale(max_col))
+pdf("../Plots/Figure_3_reaction_norms_water.pdf")
+# Optionally color the lines by source-site precipitation
+#grayscale <- colorRampPalette(c("light gray",  "black"))
+#color_var = sitedata$had_pptmean
+#max_col = 100
+#cols = (color_var - min(color_var)) * (99/ (max(color_var) - min(color_var))) + 1
+#palette(grayscale(max_col))
+
+# Alternatively color the lines by source region
+palette("default")
+
+cols = sapply(as.character(sitedata$region), switch, "Chile" = gray(0.7), "California" = gray(0.3))
 axis.scale = 1.6
 par(mfrow=c(2,2), mar=c(5,5,5,5))
 # days to flower, plasticity to water 
@@ -289,6 +296,10 @@ interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, respon
 interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$SLA, type="b", xlab="Treatment", ylab="SLA (mm2/mg)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 # leaf area, plasticity to water
 interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$Total.Area..mm2., type="b", xlab="Treatment", ylab="Leaf area (mm2)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
+
+dev.off()
+
+pdf("../Plots/Figure_3_reaction_norms_nutrients.pdf")
 
 # days to flower, plasticity to nutrients 
 if (names(d.g.fam)[1] == "Group.1") d.g.fam = d.g.fam[,-c(1,2)]
@@ -304,6 +315,7 @@ interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, respon
 # leaf area, plasticity to nutrients
 interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$Total.Area..mm2., type="b", xlab="Treatment", ylab="Leaf area (mm2)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 
+dev.off()
 
 ########################################################
 # Plot Figure 2
