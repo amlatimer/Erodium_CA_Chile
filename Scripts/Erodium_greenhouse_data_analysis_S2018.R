@@ -396,10 +396,6 @@ head(sitedata_highwater)
 allx = c("BIO1", "BIO12", "BIO15", "had_pptcv", "soil_pc1_mean", "soil_pc1_cv", "total_cover", "total_cover_CV")
 
 
-### Q HERE DO WE NEED TO TEST FOR INTERACTION WITH REGION ONE VARIABLE AT A TIME, BEFORE TESTING THE COMBINED MODELS? 
-
-
-
 #########################################################################
 # global model search and ranking via MuMIn
 
@@ -419,6 +415,9 @@ sitedata=traits.all.site
 sitedata$log_stemlength = log(sitedata$stem_length_mean)
 sitedata$log_sla = log(sitedata$SLA_mean)
 sitedata$log_area = log(sitedata$leaf_area_mean)
+
+# Standardize explanatory variables
+for (i in 1:length(allx)) sitedata[,allx[i]] = scale(sitedata[,allx[i]] )
 
 ### Set na.action for MuMIn
 options(na.action = "na.fail")
