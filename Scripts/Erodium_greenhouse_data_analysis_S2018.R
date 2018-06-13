@@ -273,6 +273,7 @@ write.csv(Q1_results, "../Results/Q1_results.csv")
 ########################################################
 
 ### Figure showing variance explained by treatment, site, interaction
+pdf("../Plots/Figure_2_Anova_barplot.pdf")
 par(mfrow=c(1,1))
 m.d2f <- lm(days_to_flower ~ treatment*Site, data=d.g.fam)
 m.sl <- lm(gen2_length_longest_stem ~ treatment*Site, data=d.g.fam)
@@ -283,6 +284,7 @@ a = list(m.d2f, m.sl, m.sla, m.area)
 a.names = c("Days to \nflower", "Stem\nlength", "SLA", "Leaf\narea")
 lapply(a, FUN=anova)
 aov.stackbar(a, a.names) # Figure showing percent variance explained for each response variable
+dev.off()
 
 
 
@@ -781,5 +783,24 @@ corrplot(cor.Chile, method="circle", order="original", p.mat=res.Chile[[1]], sig
 ## END OF ANALYSIS FOR PAPER
 ###############################################################
 
+
+# Explore associations of leaf area with other traits 
+ptemp = ggplot(d.traits.all, aes(x=leaf_area_mean, y=log(SLA_mean), color=region)) + guides(color=FALSE) +
+  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
+  geom_point(shape=16) +   
+  scale_colour_hue(l=50) + labs(x="leaf area (mm2)", y="log(stem length)") +
+  geom_smooth(method=lm)    # Add linear regression line 
+#  (by default includes 95% confidence region)
+ptemp
+
+d.traits.scaled = d.traits.all
+d.traits.scaled[,4:37] = apply(d.traits.scaled[,4:37], 2, as.numeric)
+d.traits.scaled[,4:37] = apply(d.traits.scaled[,4:37], 2, scale)
+summary(lm(log(stem_length_mean)~leaf_area_mean*region, data=d.traits.all)
+)
+summary(lm(log(days_to_flower_mean)~leaf_area_mean*region, data=d.traits.all))
+summary(lm(log(SLA_mean)~leaf_area_mean*region, data=d.traits.all))
+
+# Upshot -- leaf area is as expected correlated with SLA, but only weakly with growth rate and flowering time. Thus not really clear what the ecological significance if any is to the strong among-populationation differences in leaf area. 
 
 
