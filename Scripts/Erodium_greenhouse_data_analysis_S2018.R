@@ -10,15 +10,13 @@
 
 library(lattice); library(fields); library(MASS); library(reldist); library(lme4); library(lmerTest); library(MuMIn); library(nlme); library(lmtest); library(ggplot2); library(lars); library(glmnet); library(hier.part); library(corrplot); library(plyr); library(dplyr)
 
-setwd("/users/latimer/Google Drive/Erodium/Erodium_CA_Chile/Scripts")
-
 source("Ecic_analysis_functions.R")
 
 d = read.csv("../Data/All field data combined.csv")
 d.g = read.csv("../Data/second generation dataset.csv")
 popdata = read.csv("../Data/allpopsinfo.csv")
 sitedata = read.csv("../Data/Sitedata.csv")
-fielddata = read.csv("../Data/All field data combined.csv")
+#fielddata = read.csv("../Data/All field data combined.csv")
 
 # read in and add pptcv information from Brooke and Ernesto -- measure of temporal heterogeneity
 pptcv = read.csv("../Data/pptcv_by_site.csv")
@@ -80,7 +78,7 @@ soil_pc = prcomp(soildata[soilpc_rows,])
 biplot(soil_pc)
 soil_pc
 summary(soil_pc)
-# First PC reflects macronutrients (P) as well as MG/CA content. No single PC reflects majority of variation. But because first PC is broad measure of macronutrient availability, use it as the local soil variability measure. An alternative would be to just use phosphorus content. 
+# First PC reflects mainly soil organic matter and CEC as well as MG and CA content. No single PC reflects majority of variation. But because first PC is broad measure of nutrient profile, seems OK to use it as the local soil variability measure.
 # Add this first PC into the data set 
 d.g.fam$soil_pc1 = NA
 d.g.fam$soil_pc2 = NA
