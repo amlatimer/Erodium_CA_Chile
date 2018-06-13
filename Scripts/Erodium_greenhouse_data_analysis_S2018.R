@@ -659,7 +659,46 @@ dev.off()
 # QUESTION 3
 # Assess trait correlations and compare them between the two regions 
 
-### Make Figure 4 
+# Make Correlation Figure (Fig 4)
+
+# create matrix of traits for regions separately, and combined
+traits = names(d.traits.all)[3:15]
+traits_all = d.traits.all[,traits]
+traits_CA = filter(traits_all, region =="California")
+traits_Chile = filter(traits_all, region =="Chile")
+# rename columns for plotting
+names(traits_all) = names(traits_CA) = names(traits_Chile) = c("region", "Days to flower", "Stem length", "SLA", "Leaf area", "Days to flower H20 plast", "Stem length H2O plast", "SLA H2O plast", "Leaf Area H2O plast", "Days to flower nut plast", "Stem length nut plast", "SLA nut plast", "Leaf Area nut plast")
+
+cor.all = cor(traits_all[,2:ncol(traits_all)], use="complete.obs")
+cor.CA = cor(traits_CA[,2:ncol(traits_CA)], use="complete.obs")
+cor.Chile = cor(traits_Chile[,2:ncol(traits_Chile)], use="complete.obs")
+
+res.all <- cor.mtest(traits_all[,2:ncol(traits_all)], 0.05)
+res.CA <- cor.mtest(traits_CA[,2:ncol(traits_CA)], 0.05)  
+res.Chile <- cor.mtest(traits_Chile[,2:ncol(traits_Chile)], 0.05)
+
+# For plotting, set the diagonal values to 0's -- we want to expand the color scale to be more sensitive, rather than having it necessarily reach all the way to 1.0. Also, the large diagonal blue circles are distracting. 
+diag(cor.all) = 0
+diag(cor.CA) = 0
+diag(cor.Chile) = 0
+
+# Make the plots of correlation matrices & their significance values
+
+pdf("../Plots/corrplot_all.pdf")
+par(mfrow=c(1,1), mar=rep(4, 4))
+corrplot(cor.all, method="circle", order="original", p.mat=res.all[[1]], sig.level=0.05, type="upper", tl.pos="td", is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
+dev.off()
+
+pdf("../Plots/corrplot_CA.pdf")
+corrplot(cor.CA, method="circle", order="original", p.mat=res.CA[[1]], sig.level=0.05, type="upper", tl.pos="td", , is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
+dev.off()
+
+pdf("../Plots/corrplot_Chile.pdf")
+corrplot(cor.Chile, method="circle", order="original", p.mat=res.Chile[[1]], sig.level=0.05, type="upper", tl.pos="td", is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
+dev.off()
+
+
+### Make Figure 5 
 
 d.traits.all = merge(d.traits.all, worldclimdata, by="Site")
 names(d.traits.all)[3] = "region"
@@ -765,39 +804,6 @@ lmm_4_null <- lmer(days_to_flower_mean~BIO12 + (1|Site), data=d.traits.all, na.a
 lmm_4 <- lmer(days_to_flower_mean~BIO12*region + (1|Site), data=d.traits.all, na.action=na.exclude)
 lmerTest::anova(lmm_4_null, lmm_4)
 
-################### 
-# Trait associations
-
-# Make Correlation Figure (Fig 5)
-
-# create matrix of traits for regions separately, and combined
-traits = names(d.traits.all)[3:15]
-traits_all = d.traits.all[,traits]
-traits_CA = filter(traits_all, region =="California")
-traits_Chile = filter(traits_all, region =="Chile")
-# rename columns for plotting
-names(traits_all) = names(traits_CA) = names(traits_Chile) = c("region", "Days to flower", "Stem length", "SLA", "Leaf area", "Days to flower H20 plast", "Stem length H2O plast", "SLA H2O plast", "Leaf Area H2O plast", "Days to flower nut plast", "Stem length nut plast", "SLA nut plast", "Leaf Area nut plast")
-
-cor.all = cor(traits_all[,2:ncol(traits_all)], use="complete.obs")
-cor.CA = cor(traits_CA[,2:ncol(traits_CA)], use="complete.obs")
-cor.Chile = cor(traits_Chile[,2:ncol(traits_Chile)], use="complete.obs")
-
-res.all <- cor.mtest(traits_all[,2:ncol(traits_all)], 0.05)
-res.CA <- cor.mtest(traits_CA[,2:ncol(traits_CA)], 0.05)  
-res.Chile <- cor.mtest(traits_Chile[,2:ncol(traits_Chile)], 0.05)
-
-# For plotting, set the diagonal values to 0's -- we want to expand the color scale to be more sensitive, rather than having it necessarily reach all the way to 1.0. Also, the large diagonal blue circles are distracting. 
-diag(cor.all) = 0
-diag(cor.CA) = 0
-diag(cor.Chile) = 0
-
-# Make the plots of correlation matrices & their significance values
-par(mar=rep(4, 4))
-#pdf("./Plots/corrplot_all.pdf")
-corrplot(cor.all, method="circle", order="original", p.mat=res.all[[1]], sig.level=0.05, type="upper", tl.pos="td", is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
-#dev.off()
-corrplot(cor.CA, method="circle", order="original", p.mat=res.CA[[1]], sig.level=0.05, type="upper", tl.pos="td", , is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
-corrplot(cor.Chile, method="circle", order="original", p.mat=res.Chile[[1]], sig.level=0.05, type="upper", tl.pos="td", is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
 
 ###############################################################
 ## END OF ANALYSIS FOR PAPER
