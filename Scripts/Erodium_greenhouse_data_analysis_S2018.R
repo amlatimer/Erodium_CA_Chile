@@ -418,6 +418,7 @@ sitedata$log_area = log(sitedata$leaf_area_mean)
 
 # Standardize explanatory variables
 for (i in 1:length(allx)) sitedata[,allx[i]] = scale(sitedata[,allx[i]] )
+for (i in 1:length(allx)) sitedata[,allx[i]] = scale(sitedata[,allx[i]] )
 
 ### Set na.action for MuMIn
 options(na.action = "na.fail")
@@ -739,10 +740,30 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
+pdf("../Plots/Figure_5_trait_relationships.pdf")
 multiplot(p1, p3, p2, p4, cols=2)
+dev.off()
 
-# In general, what we see is an integration of rapid life cycle that is linked to water stress, and also potentially soil nutrients. The set of traits associated with low precipitation (thus short growing season) includes high SLA, fast growth, early flowering, and reduced plasticity in flowering (flower early even at low water supply). 
+# In general, what we see is an integration of rapid life cycle that is linked to water stress, and also potentially soil nutrients. The set of traits associated with low precipitation (thus short growing season) includes high SLA, fast growth, early flowering, and reduced plasticity in flowering (flower early even at low water supply).
 
+# Statistical test for differences in these associations between regions. 
+# Can test this as an interaction term in mixed model with population as a random effect. 
+# Days to flower vs. stem length 
+lmm_1_null <- lmer(days_to_flower_mean~log(stem_length_mean) + (1|Site), data=d.traits.all, na.action=na.exclude)
+lmm_1 <- lmer(days_to_flower_mean~log(stem_length_mean)*region + (1|Site), data=d.traits.all, na.action=na.exclude)
+lmerTest::anova(lmm_1_null, lmm_1)
+# Days to flower vs SLA
+lmm_2_null <- lmer(days_to_flower_mean~log(SLA_mean) + (1|Site), data=d.traits.all, na.action=na.exclude)
+lmm_2 <- lmer(days_to_flower_mean~log(SLA_mean)*region + (1|Site), data=d.traits.all, na.action=na.exclude)
+lmerTest::anova(lmm_2_null, lmm_2)
+# SLA vs precipitation
+lmm_3_null <- lmer(log(SLA_mean)~BIO12 + (1|Site), data=d.traits.all, na.action=na.exclude)
+lmm_3 <- lmer(log(SLA_mean)~BIO12*region + (1|Site), data=d.traits.all, na.action=na.exclude)
+lmerTest::anova(lmm_3_null, lmm_3)
+# days to flowering vs precipitation
+lmm_4_null <- lmer(days_to_flower_mean~BIO12 + (1|Site), data=d.traits.all, na.action=na.exclude)
+lmm_4 <- lmer(days_to_flower_mean~BIO12*region + (1|Site), data=d.traits.all, na.action=na.exclude)
+lmerTest::anova(lmm_4_null, lmm_4)
 
 ################### 
 # Trait associations
