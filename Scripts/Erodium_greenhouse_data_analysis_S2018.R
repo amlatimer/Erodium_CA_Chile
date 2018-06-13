@@ -268,6 +268,23 @@ Q1_results = rbind(trait_results_means, trait_results_plast)
 
 write.csv(Q1_results, "../Results/Q1_results.csv")
 
+########################################################
+# Plot Figure 2
+########################################################
+
+### Figure showing variance explained by treatment, site, interaction
+par(mfrow=c(1,1))
+m.d2f <- lm(days_to_flower ~ treatment*Site, data=d.g.fam)
+m.sl <- lm(gen2_length_longest_stem ~ treatment*Site, data=d.g.fam)
+m.sla <- lm(SLA ~ treatment*Site, data=d.g.fam)
+m.area <- lm(Total.Area..mm2. ~ treatment*Site, data=d.g.fam)
+
+a = list(m.d2f, m.sl, m.sla, m.area)
+a.names = c("Days to \nflower", "Stem\nlength", "SLA", "Leaf\narea")
+lapply(a, FUN=anova)
+aov.stackbar(a, a.names) # Figure showing percent variance explained for each response variable
+
+
 
 ##############################
 # Make interaction plot (Figure 3)
@@ -316,24 +333,6 @@ interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, respon
 interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$Total.Area..mm2., type="b", xlab="Treatment", ylab="Leaf area (mm2)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 
 dev.off()
-
-########################################################
-# Plot Figure 2
-########################################################
-
-### Figure showing variance explained by treatment, site, interaction
-par(mfrow=c(1,1))
-m.d2f <- lm(days_to_flower ~ treatment*Site, data=d.g.fam)
-m.sl <- lm(gen2_length_longest_stem ~ treatment*Site, data=d.g.fam)
-m.sla <- lm(SLA ~ treatment*Site, data=d.g.fam)
-m.area <- lm(Total.Area..mm2. ~ treatment*Site, data=d.g.fam)
-
-a = list(m.d2f, m.sl, m.sla, m.area)
-a.names = c("Days to \nflower", "Stem\nlength", "SLA", "Leaf\narea")
-lapply(a, FUN=anova)
-aov.stackbar(a, a.names) # Figure showing percent variance explained for each response variable
-
-# Needs an accompanying ANOVA table with p-values for the supplement
 
 
 
