@@ -462,7 +462,7 @@ par(mfrow=c(2,2), mar=c(7,4,2,2)+0.1)
 axlab = 1.2
 axtitle = 1.1
 
-# days to flowering
+# Flowering time
 testdata = cbind(days_to_flower=sitedata$days_to_flower, sitedata[,allx])
 testdata = testdata[complete.cases(testdata),]
 names(testdata)[2:(length(allx)+1)] = xnames
@@ -472,7 +472,7 @@ d2f_ms1 = pdredge(fm1, rank="AICc", cluster=clust)
 imp = importance(subset(d2f_ms1,delta <= 3))
 imp = imp[imp>=0.1]
 df = data.frame(variable=names(imp), impvalue=matrix(imp))
-barplot(df$impvalue, names.arg=df$variable, las=2, ylab="Importance", cex.axis=1.3, cex.lab=axlab, cex.names = axtitle, main="Days to flowering", ylim=c(0,1))
+barplot(df$impvalue, names.arg=df$variable, las=2, ylab="Importance", cex.axis=1.3, cex.lab=axlab, cex.names = axtitle, main="Flowering time", ylim=c(0,1))
 #'Best' modelx
 summary(get.models(d2f_ms1, 1)[[1]])
 AICc(get.models(d2f_ms1, 2)[[1]]) - AICc(get.models(d2f_ms1, 1)[[1]])
@@ -549,7 +549,7 @@ d2f_wp_ms1 = pdredge(fm1, rank="AICc", cluster=clust)
 imp = importance(subset(d2f_wp_ms1,delta <= 6))
 imp = imp[imp>=0.1]
 df = data.frame(variable=names(imp), impvalue=matrix(imp))
-barplot(df$impvalue, names.arg=df$variable, las=2, ylab="Importance", cex.axis=1.3, cex.lab=axlab, cex.names = axtitle, main="Days to flower", ylim=c(0,1))
+barplot(df$impvalue, names.arg=df$variable, las=2, ylab="Importance", cex.axis=1.3, cex.lab=axlab, cex.names = axtitle, main="Flowering time", ylim=c(0,1))
 #'Best' model
 summary(get.models(d2f_wp_ms1, 1)[[1]])
 AICc(get.models(d2f_wp_ms1, 2)[[1]]) - AICc(get.models(d2f_wp_ms1, 1)[[1]])
@@ -622,7 +622,7 @@ d2f_np_ms1 = pdredge(fm1, rank="AICc", cluster=clust)
 imp = importance(subset(d2f_np_ms1,delta <= 3))
 imp = imp[imp>=0.1]
 df = data.frame(variable=names(imp), impvalue=matrix(imp))
-barplot(df$impvalue, names.arg=df$variable, las=2, ylab="Importance", cex.axis=1.3, cex.lab=1.3, cex.names = 1.2, main="Days to flower", ylim=c(0,1))
+barplot(df$impvalue, names.arg=df$variable, las=2, ylab="Importance", cex.axis=1.3, cex.lab=1.3, cex.names = 1.2, main="Flowering time", ylim=c(0,1))
 summary(get.models(d2f_np_ms1, 1)[[1]])
 AICc(get.models(d2f_np_ms1, 2)[[1]]) - AICc(get.models(d2f_np_ms1, 1)[[1]])
 
@@ -691,7 +691,7 @@ traits_all = d.traits.all[,traits]
 traits_CA = filter(traits_all, region =="California")
 traits_Chile = filter(traits_all, region =="Chile")
 # rename columns for plotting
-names(traits_all) = names(traits_CA) = names(traits_Chile) = c("region", "Days to flower", "Stem length", "SLA", "Leaf area", "Days to flower H20 plast", "Stem length H2O plast", "SLA H2O plast", "Leaf Area H2O plast", "Days to flower nut plast", "Stem length nut plast", "SLA nut plast", "Leaf Area nut plast")
+names(traits_all) = names(traits_CA) = names(traits_Chile) = c("region", "Flowering time", "Stem length", "SLA", "Leaf area", "Flowering time H20 plast", "Stem length H2O plast", "SLA H2O plast", "Leaf Area H2O plast", "Flowering time nut plast", "Stem length nut plast", "SLA nut plast", "Leaf Area nut plast")
 
 cor.all = cor(traits_all[,2:ncol(traits_all)], use="complete.obs")
 cor.CA = cor(traits_CA[,2:ncol(traits_CA)], use="complete.obs")
@@ -730,7 +730,7 @@ names(d.traits.all)[3] = "region"
 p1 = ggplot(d.traits.all, aes(x=log(stem_length_mean), y=days_to_flower_mean, color=region)) + guides(color=FALSE) +
   theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
   geom_point(shape=16) +   
-  scale_colour_hue(l=50) + labs(x="log(stem_length cm)", y="days to flowering") +
+  scale_colour_hue(l=50) + labs(x="log(Stem_length cm)", y="Flowering time (days)") +
     geom_smooth(method=lm)    # Add linear regression line 
 #  (by default includes 95% confidence region)
 
@@ -738,7 +738,7 @@ p1 = ggplot(d.traits.all, aes(x=log(stem_length_mean), y=days_to_flower_mean, co
 p2 = ggplot(d.traits.all, aes(x=log(SLA_mean), y=days_to_flower_mean, color=region)) + guides(color=FALSE) +
   theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
   geom_point(shape=16) +   
-  scale_colour_hue(l=50) + labs(x="log(SLA mm2/mg)", y="days to flowering") +
+  scale_colour_hue(l=50) + labs(x="log(SLA mm2/mg)", y="Flowering time (days)") +
   geom_smooth(method=lm)   # Add linear regression line 
 #  (by default includes 95% confidence region)
 
@@ -756,7 +756,7 @@ p3 = ggplot(d.traits.all, aes(x=BIO12, y=log(SLA_mean), color=region)) +
 p4 = ggplot(d.traits.all, aes(x=BIO12, y=days_to_flower_mean, color=region)) + guides(color=FALSE) +
   theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
   geom_point(shape=16) +   
-  scale_colour_hue(l=50) + labs(x="mean annual precip. (mm)", y="days to flowering") +
+  scale_colour_hue(l=50) + labs(x="mean annual precip. (mm)", y="Flowering time (days)") +
   geom_smooth(method=lm, se=T)   # Add linear regression line 
 #  (by default includes 95% confidence region)
 
@@ -814,19 +814,19 @@ if (replace_plots) dev.off()
 # Days to flower vs. stem length 
 lmm_1_null <- lmer(days_to_flower_mean~log(stem_length_mean) + (1|Site), data=d.traits.all, na.action=na.exclude)
 lmm_1 <- lmer(days_to_flower_mean~log(stem_length_mean)*region + (1|Site), data=d.traits.all, na.action=na.exclude)
-lmerTest::anova(lmm_1_null, lmm_1)
+anova(lmm_1_null, lmm_1)
 # Days to flower vs SLA
 lmm_2_null <- lmer(days_to_flower_mean~log(SLA_mean) + (1|Site), data=d.traits.all, na.action=na.exclude)
 lmm_2 <- lmer(days_to_flower_mean~log(SLA_mean)*region + (1|Site), data=d.traits.all, na.action=na.exclude)
-lmerTest::anova(lmm_2_null, lmm_2)
+anova(lmm_2_null, lmm_2)
 # SLA vs precipitation
 lmm_3_null <- lmer(log(SLA_mean)~BIO12 + (1|Site), data=d.traits.all, na.action=na.exclude)
 lmm_3 <- lmer(log(SLA_mean)~BIO12*region + (1|Site), data=d.traits.all, na.action=na.exclude)
-lmerTest::anova(lmm_3_null, lmm_3)
+anova(lmm_3_null, lmm_3)
 # days to flowering vs precipitation
 lmm_4_null <- lmer(days_to_flower_mean~BIO12 + (1|Site), data=d.traits.all, na.action=na.exclude)
 lmm_4 <- lmer(days_to_flower_mean~BIO12*region + (1|Site), data=d.traits.all, na.action=na.exclude)
-lmerTest::anova(lmm_4_null, lmm_4)
+anova(lmm_4_null, lmm_4)
 
 
 ###############################################################
