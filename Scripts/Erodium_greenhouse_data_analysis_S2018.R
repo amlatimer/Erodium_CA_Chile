@@ -9,11 +9,31 @@
 # If FALSE, script will display on screen. 
 replace_plots <- FALSE 
 
+##### SAVE NEWLY GENERATED RESULTS TABLES?
+# IF TRUE, script will save results to replace existing csv tables
+# If FALSE, script will not save them. 
+replace_tables <- FALSE 
+
 ###########################
 # Load data and libraries
 ###########################
 
-library(lattice); library(fields); library(MASS); library(reldist); library(lme4); library(lmerTest); library(MuMIn); library(nlme); library(lmtest); library(ggplot2); library(lars); library(glmnet); library(hier.part); library(corrplot); library(plyr); library(dplyr)
+library(lattice)
+library(fields)
+library(MASS)
+library(reldist)
+library(lme4)
+library(lmerTest)
+library(MuMIn)
+library(nlme)
+library(lmtest)
+library(ggplot2)
+library(lars)
+library(corrplot)
+library(plyr)
+library(dplyr)
+library(snow)
+library(grid)
 
 source("Ecic_analysis_functions.R")
 
@@ -161,7 +181,7 @@ head(d.traits.all)
 m1.d2f = lmer(days_to_flower~treatment+(1|region), data=d.g.fam[!is.na(d.g.fam$days_to_flower),], REML=FALSE)
 m2.d2f = lmer(days_to_flower~treatment+(1|region/Site), data=d.g.fam[!is.na(d.g.fam$days_to_flower),], REML=FALSE)
 # Test significance of region random effects
-rand(m1.d2f)
+ranova(m1.d2f)
 # Test significance of Site random effects
 anova(m1.d2f, m2.d2f)
 # Test significance of treatment fixed effect
@@ -190,12 +210,12 @@ test_trait_plast <- function(d, traits) {
     fit_full = lmer(trait ~ (1 | region/Site), data=dtemp, REML=FALSE)
     fit_reduced = lmer(trait~ (1|region), data=dtemp, REML=FALSE)
     # model tests
-    lrtest_region = rand(fit_reduced)
+    lrtest_region = ranova(fit_reduced)
     lrtest_site = anova(fit_reduced, fit_full)
     # pull out and store results 
     trait_labels = c(trait_labels, traits[i])
-    chisq_region = c(chisq_region, lrtest_region$rand.table$Chi.sq)
-    pval_region = c(pval_region, lrtest_region$rand.table$p.value)
+    chisq_region = c(chisq_region, lrtest_region$LRT[2])
+    pval_region = c(pval_region, lrtest_region$`Pr(>Chisq)`[2])
     chisq_site = c(chisq_site, lrtest_site$Chisq[2])
     pval_site = c(pval_site, lrtest_site$`Pr(>Chisq)`[2])
   }
@@ -232,15 +252,15 @@ test_trait_means <- function(d, traits) {
     fit_reduced = lmer(trait~treatment + (1|region), data=dtemp, REML=FALSE)
     # model tests
     anova_treatment = anova(fit_full)
-    lrtest_region = rand(fit_reduced)
+    lrtest_region = ranova(fit_reduced)
     lrtest_site = anova(fit_reduced, fit_full)
     # pull out and store results 
     trait_labels = c(trait_labels, traits[i])
-    chisq_region = c(chisq_region, lrtest_region$rand.table$Chi.sq)
-    pval_region = c(pval_region, lrtest_region$rand.table$p.value)
+    chisq_region = c(chisq_region, lrtest_region$LRT[2])
+    pval_region = c(pval_region, lrtest_region$`Pr(>Chisq)`[2])
     chisq_site = c(chisq_site, lrtest_site$Chisq[2])
     pval_site = c(pval_site, lrtest_site$`Pr(>Chisq)`[2])
-    F_treatment = c(F_treatment, anova_treatment$F.value)
+    F_treatment = c(F_treatment, anova_treatment$`F value`)
     pval_treatment = c(pval_treatment, anova_treatment$`Pr(>F)`)
   }
   
@@ -271,7 +291,7 @@ trait_results_plast
 trait_results_plast$F_treatment = trait_results_plast$pval_treatment_adj = NA
 Q1_results = rbind(trait_results_means, trait_results_plast)
 
-write.csv(Q1_results, "../Results/Q1_results.csv")
+if (replace_tables) write.csv(Q1_results, "../Results/Q1_results.csv")
 
 ########################################################
 # Plot Figure 2
@@ -429,7 +449,7 @@ for (i in 1:length(allx)) sitedata[,allx[i]] = scale(sitedata[,allx[i]] )
 options(na.action = "na.fail")
 
 # Set up the cluster for running pdredge()
-library(snow)
+
 clusterType <- if(length(find.package("snow", quiet = TRUE))) "SOCK" else "PSOCK"
 clust <- try(makeCluster(getOption("cl.cores", 4), type = clusterType))
 
