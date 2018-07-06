@@ -4,6 +4,11 @@
 
 # Note this uses absolute plasticity values
 
+##### SAVE NEW PLOTS AS PDFS? 
+# IF TRUE, script will replace existing pdfs in the plots folder
+# If FALSE, script will display on screen. 
+replace_plots <- FALSE 
+
 ###########################
 # Load data and libraries
 ###########################
@@ -273,7 +278,7 @@ write.csv(Q1_results, "../Results/Q1_results.csv")
 ########################################################
 
 ### Figure showing variance explained by treatment, site, interaction
-pdf("../Plots/Figure_2_Anova_barplot.pdf")
+if (replace_plots) pdf("../Plots/Figure_2_Anova_barplot.pdf")
 par(mfrow=c(1,1))
 m.d2f <- lm(days_to_flower ~ Site*treatment, data=d.g.fam)
 m.sl <- lm(gen2_length_longest_stem ~ Site*treatment, data=d.g.fam)
@@ -284,14 +289,14 @@ a = list(m.d2f, m.sl, m.sla, m.area)
 a.names = c("Days to \nflower", "Stem\nlength", "SLA", "Leaf\narea")
 lapply(a, FUN=anova)
 aov.stackbar(a, a.names) # Figure showing percent variance explained for each response variable
-dev.off()
+if (replace_plots) dev.off()
 
 
 
 ##############################
 # Make interaction plot (Figure 3)
 
-pdf("../Plots/Figure_3_reaction_norms_water.pdf")
+if (replace_plots) pdf("../Plots/Figure_3_reaction_norms_water.pdf")
 # Optionally color the lines by source-site precipitation
 #grayscale <- colorRampPalette(c("light gray",  "black"))
 #color_var = sitedata$had_pptmean
@@ -316,9 +321,9 @@ interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, respon
 # leaf area, plasticity to water
 interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$Total.Area..mm2., type="b", xlab="Treatment", ylab="Leaf area (mm2)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 
-dev.off()
+if (replace_plots) dev.off()
 
-pdf("../Plots/Figure_3_reaction_norms_nutrients.pdf")
+if (replace_plots) pdf("../Plots/Figure_3_reaction_norms_nutrients.pdf")
 
 # days to flower, plasticity to nutrients 
 if (names(d.g.fam)[1] == "Group.1") d.g.fam = d.g.fam[,-c(1,2)]
@@ -334,7 +339,7 @@ interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, respon
 # leaf area, plasticity to nutrients
 interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$Total.Area..mm2., type="b", xlab="Treatment", ylab="Leaf area (mm2)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 
-dev.off()
+if (replace_plots) dev.off()
 
 
 
@@ -430,7 +435,7 @@ clust <- try(makeCluster(getOption("cl.cores", 4), type = clusterType))
 
 # Make a plot of importance values 
 
-pdf("../Plots/Importance_trait_means.pdf")
+if (replace_plots) pdf("../Plots/Importance_trait_means.pdf")
 
 # Group plots into sets of 4
 par(mfrow=c(2,2), mar=c(7,4,2,2)+0.1)
@@ -503,12 +508,12 @@ barplot(df$impvalue, names.arg=df$variable, las=2, ylab="Importance", cex.axis=1
 summary(get.models(leafarea_ms1, 1)[[1]])
 AICc(get.models(leafarea_ms1, 2)[[1]]) - AICc(get.models(leafarea_ms1, 1)[[1]])
 
-dev.off()
+if (replace_plots) dev.off()
 # End of plot 
 
 
 # Make plot of importance values for plasticity to water 
-pdf("../Plots/Importance_plasticity_water.pdf")
+if (replace_plots) pdf("../Plots/Importance_plasticity_water.pdf")
 par(mfrow=c(2,2), mar=c(7,4,2,2)+0.1)
 axlab = 1.2
 axtitle = 1.1
@@ -576,12 +581,12 @@ barplot(df$impvalue, names.arg=df$variable, las=2, ylab="Importance", cex.axis=1
 summary(get.models(area_wp_ms1, 1)[[1]])
 AICc(get.models(area_wp_ms1, 2)[[1]]) - AICc(get.models(area_wp_ms1, 1)[[1]])
 
-dev.off()
+if (replace_plots) dev.off()
 # End of plot 
 
 
 # Make plot of importance values for plasticity to nutrients 
-pdf("../Plots/Importance_plasticity_nutrients.pdf")
+if (replace_plots) pdf("../Plots/Importance_plasticity_nutrients.pdf")
 par(mfrow=c(2,2), mar=c(7,4,2,2)+0.1)
 axlab = 1.2
 axtitle = 1.1
@@ -632,7 +637,6 @@ barplot(df$impvalue, names.arg=df$variable, las=2, ylab="Importance", cex.axis=1
 summary(get.models(SLA_np_ms1, 1)[[1]])
 AICc(get.models(SLA_np_ms1, 2)[[1]]) - AICc(get.models(SLA_np_ms1, 1)[[1]])
 
-
 # plasticity of leaf area to nutrients
 testdata = cbind(area_plast=sitedata$area_plast_nut, sitedata[,allx])
 testdata = testdata[complete.cases(testdata),]
@@ -648,7 +652,7 @@ barplot(df$impvalue[which(df$impvalue>=0.3)], names.arg=df$variable[which(df$imp
 summary(get.models(area_np_ms1, 1)[[1]])
 AICc(get.models(area_np_ms1, 2)[[1]]) - AICc(get.models(area_np_ms1, 1)[[1]])
 
-dev.off()
+if (replace_plots) dev.off()
 # End of plot 
 
 # End of Q2 section
@@ -684,18 +688,18 @@ diag(cor.Chile) = 0
 
 # Make the plots of correlation matrices & their significance values
 
-pdf("../Plots/corrplot_all.pdf")
+if (replace_plots) pdf("../Plots/corrplot_all.pdf")
 par(mfrow=c(1,1), mar=rep(4, 4))
 corrplot(cor.all, method="circle", order="original", p.mat=res.all[[1]], sig.level=0.05, type="upper", tl.pos="td", is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
-dev.off()
+if (replace_plots) dev.off()
 
-pdf("../Plots/corrplot_CA.pdf")
+if (replace_plots) pdf("../Plots/corrplot_CA.pdf")
 corrplot(cor.CA, method="circle", order="original", p.mat=res.CA[[1]], sig.level=0.05, type="upper", tl.pos="td", , is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
-dev.off()
+if (replace_plots) dev.off()
 
-pdf("../Plots/corrplot_Chile.pdf")
+if (replace_plots) pdf("../Plots/corrplot_Chile.pdf")
 corrplot(cor.Chile, method="circle", order="original", p.mat=res.Chile[[1]], sig.level=0.05, type="upper", tl.pos="td", is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
-dev.off()
+if (replace_plots) dev.off()
 
 
 ### Make Figure 5 
@@ -779,9 +783,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-pdf("../Plots/Figure_5_trait_relationships.pdf")
+if (replace_plots) pdf("../Plots/Figure_5_trait_relationships.pdf")
 multiplot(p1, p3, p2, p4, cols=2)
-dev.off()
+if (replace_plots) dev.off()
 
 # In general, what we see is an integration of rapid life cycle that is linked to water stress, and also potentially soil nutrients. The set of traits associated with low precipitation (thus short growing season) includes high SLA, fast growth, early flowering, and reduced plasticity in flowering (flower early even at low water supply).
 
