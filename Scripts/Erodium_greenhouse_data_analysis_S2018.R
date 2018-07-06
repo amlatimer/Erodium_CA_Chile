@@ -300,13 +300,13 @@ if (replace_tables) write.csv(Q1_results, "../Results/Q1_results.csv")
 ### Figure showing variance explained by treatment, site, interaction
 if (replace_plots) pdf("../Plots/Figure_2_Anova_barplot.pdf")
 par(mfrow=c(1,1))
-m.d2f <- lm(days_to_flower ~ Site*treatment, data=d.g.fam)
-m.sl <- lm(gen2_length_longest_stem ~ Site*treatment, data=d.g.fam)
-m.sla <- lm(SLA ~ Site*treatment, data=d.g.fam)
-m.area <- lm(Total.Area..mm2. ~ Site*treatment, data=d.g.fam)
+m.d2f <- lm(days_to_flower ~ Site*treatment, data=d.g.fam, na.action = na.exclude)
+m.sl <- lm(gen2_length_longest_stem ~ Site*treatment, data=d.g.fam, na.action = na.exclude)
+m.sla <- lm(SLA ~ Site*treatment, data=d.g.fam, na.action = na.exclude)
+m.area <- lm(Total.Area..mm2. ~ Site*treatment, data=d.g.fam, na.action = na.exclude)
 
 a = list(m.d2f, m.sl, m.sla, m.area)
-a.names = c("Days to \nflower", "Stem\nlength", "SLA", "Leaf\narea")
+a.names = c("Flowering \ntime", "Stem\nlength", "SLA", "Leaf\narea")
 lapply(a, FUN=anova)
 aov.stackbar(a, a.names) # Figure showing percent variance explained for each response variable
 if (replace_plots) dev.off()
@@ -333,7 +333,7 @@ par(mfrow=c(2,2), mar=c(5,5,5,5))
 # days to flower, plasticity to water 
 plotdata = d.g.fam[d.g.fam$treatment %in% c("high_water","low_water"),]
 plotdata$treatment = droplevels(plotdata$treatment)
-interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$days_to_flower, type="b", xlab="Treatment", ylab="Days to flowering", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
+interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$days_to_flower, type="b", xlab="Treatment", ylab="Flowering time (days)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 # stem length, plasticity to water
 interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$gen2_length_longest_stem, type="b", xlab="Treatment", ylab="Length of longest stem (cm)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 # SLA, plasticity to water
@@ -351,7 +351,7 @@ plotdata = filter(d.g.fam, treatment %in% c("high_nut","low_nut"))
 plotdata$treatment = droplevels(plotdata$treatment)
 par(mfrow=c(2,2))
 # days to flower, plasticity to nutrients 
-interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$days_to_flower, type="b", xlab="Treatment", ylab="Days to flower", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
+interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$days_to_flower, type="b", xlab="Treatment", ylab="Flowering time (days)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 # stem length, plasticity to nutrients
 interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$gen2_length_longest_stem, type="b", xlab="Treatment", ylab="Length of longest stem (cm)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 # SLA, plasticity to nutrients
