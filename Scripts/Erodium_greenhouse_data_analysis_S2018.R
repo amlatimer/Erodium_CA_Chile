@@ -833,24 +833,3 @@ anova(lmm_4_null, lmm_4)
 ## END OF ANALYSIS FOR PAPER
 ###############################################################
 
-
-# Explore associations of leaf area with other traits 
-ptemp = ggplot(d.traits.all, aes(x=leaf_area_mean, y=log(SLA_mean), color=region)) + guides(color=FALSE) +
-  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
-  geom_point(shape=16) +   
-  scale_colour_hue(l=50) + labs(x="leaf area (mm2)", y="log(stem length)") +
-  geom_smooth(method=lm)    # Add linear regression line 
-#  (by default includes 95% confidence region)
-ptemp
-
-d.traits.scaled = d.traits.all
-d.traits.scaled[,4:37] = apply(d.traits.scaled[,4:37], 2, as.numeric)
-d.traits.scaled[,4:37] = apply(d.traits.scaled[,4:37], 2, scale)
-summary(lm(log(stem_length_mean)~leaf_area_mean*region, data=d.traits.all)
-)
-summary(lm(log(days_to_flower_mean)~leaf_area_mean*region, data=d.traits.all))
-summary(lm(log(SLA_mean)~leaf_area_mean*region, data=d.traits.all))
-
-# Upshot -- leaf area is as expected correlated with SLA, but only weakly with growth rate and flowering time. Thus not really clear what the ecological significance if any is to the strong among-populationation differences in leaf area. 
-
-
