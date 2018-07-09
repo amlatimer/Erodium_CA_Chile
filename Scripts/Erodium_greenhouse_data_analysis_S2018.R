@@ -7,7 +7,7 @@
 ##### SAVE NEW PLOTS AS PDFS? 
 # IF TRUE, script will replace existing pdfs in the plots folder
 # If FALSE, script will display on screen. 
-replace_plots <- FALSE 
+replace_plots <- FALSE
 
 ##### SAVE NEWLY GENERATED RESULTS TABLES?
 # IF TRUE, script will save results to replace existing csv tables
@@ -413,13 +413,6 @@ head(traits.all.site)
 sitedata_lowater = merge(sitedata_lowater, field_data_site, by="Site")
 sitedata_highwater = merge(sitedata_highwater, field_data_site, by="Site")
 head(sitedata_highwater)
-
-
-###################################################################
-# Test one explanatory variable at a time, and check for interaction with region 
-###################################################################
-allx = c("BIO1", "BIO12", "BIO15", "had_pptcv", "soil_pc1_mean", "soil_pc1_cv", "total_cover", "total_cover_CV")
-
 
 #########################################################################
 # global model search and ranking via MuMIn
