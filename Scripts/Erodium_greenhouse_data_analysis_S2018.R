@@ -4,7 +4,7 @@
 
 # Note this uses absolute plasticity values
 
-##### SAVE NEW PLOTS AS PDFS? 
+##### SAVE NEW PLOTS? 
 # IF TRUE, script will replace existing pdfs in the plots folder
 # If FALSE, script will display on screen. 
 replace_plots <- FALSE
@@ -34,6 +34,7 @@ library(plyr)
 library(dplyr)
 library(snow)
 library(grid)
+library(wesanderson)
 
 source("Ecic_analysis_functions.R")
 
@@ -298,7 +299,7 @@ if (replace_tables) write.csv(Q1_results, "../Results/Q1_results.csv")
 ########################################################
 
 ### Figure showing variance explained by treatment, site, interaction
-if (replace_plots) pdf("../Plots/Figure_2_Anova_barplot.pdf")
+if (replace_plots) jpeg("../Plots/Figure_2_Anova_barplot.jpg", width=480, height=480) #pdf("../Plots/Figure_2_Anova_barplot.pdf")
 par(mfrow=c(1,1))
 m.d2f <- lm(days_to_flower ~ Site*treatment, data=d.g.fam, na.action = na.exclude)
 m.sl <- lm(gen2_length_longest_stem ~ Site*treatment, data=d.g.fam, na.action = na.exclude)
@@ -316,7 +317,7 @@ if (replace_plots) dev.off()
 ##############################
 # Make interaction plot (Figure 3)
 
-if (replace_plots) pdf("../Plots/Figure_3_reaction_norms_water.pdf")
+if (replace_plots) jpeg("../Plots/Figure_3_reaction_norms_water.jpg")#pdf("../Plots/Figure_3_reaction_norms_water.pdf")
 # Optionally color the lines by source-site precipitation
 #grayscale <- colorRampPalette(c("light gray",  "black"))
 #color_var = sitedata$had_pptmean
@@ -343,7 +344,7 @@ interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, respon
 
 if (replace_plots) dev.off()
 
-if (replace_plots) pdf("../Plots/Figure_3_reaction_norms_nutrients.pdf")
+if (replace_plots) jpeg("../Plots/Figure_3_reaction_norms_nutrients.jpg")#pdf("../Plots/Figure_3_reaction_norms_nutrients.pdf")
 
 # days to flower, plasticity to nutrients 
 if (names(d.g.fam)[1] == "Group.1") d.g.fam = d.g.fam[,-c(1,2)]
@@ -451,7 +452,7 @@ clust <- try(makeCluster(getOption("cl.cores", 4), type = clusterType))
 
 # Make a plot of importance values 
 
-if (replace_plots) pdf("../Plots/Importance_trait_means.pdf")
+if (replace_plots) jpeg("../Plots/Importance_trait_means.jpg")#pdf("../Plots/Importance_trait_means.pdf")
 
 # Group plots into sets of 4
 par(mfrow=c(2,2), mar=c(7,4,2,2)+0.1)
@@ -529,7 +530,7 @@ if (replace_plots) dev.off()
 
 
 # Make plot of importance values for plasticity to water 
-if (replace_plots) pdf("../Plots/Importance_plasticity_water.pdf")
+if (replace_plots) jpeg("../Plots/Importance_plasticity_water.jpg")#pdf("../Plots/Importance_plasticity_water.pdf")
 par(mfrow=c(2,2), mar=c(7,4,2,2)+0.1)
 axlab = 1.2
 axtitle = 1.1
@@ -602,7 +603,7 @@ if (replace_plots) dev.off()
 
 
 # Make plot of importance values for plasticity to nutrients 
-if (replace_plots) pdf("../Plots/Importance_plasticity_nutrients.pdf")
+if (replace_plots) jpeg("../Plots/Importance_plasticity_nutrients.jpg") #pdf("../Plots/Importance_plasticity_nutrients.pdf")
 par(mfrow=c(2,2), mar=c(7,4,2,2)+0.1)
 axlab = 1.2
 axtitle = 1.1
@@ -669,6 +670,8 @@ summary(get.models(area_np_ms1, 1)[[1]])
 AICc(get.models(area_np_ms1, 2)[[1]]) - AICc(get.models(area_np_ms1, 1)[[1]])
 
 if (replace_plots) dev.off()
+stopCluster(clust)
+
 # End of plot 
 
 # End of Q2 section
@@ -704,16 +707,16 @@ diag(cor.Chile) = 0
 
 # Make the plots of correlation matrices & their significance values
 
-if (replace_plots) pdf("../Plots/corrplot_all.pdf")
+if (replace_plots) jpeg("../Plots/corrplot_all.jpg") #pdf("../Plots/corrplot_all.pdf")
 par(mfrow=c(1,1), mar=rep(4, 4))
 corrplot(cor.all, method="circle", order="original", p.mat=res.all[[1]], sig.level=0.05, type="upper", tl.pos="td", is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
 if (replace_plots) dev.off()
 
-if (replace_plots) pdf("../Plots/corrplot_CA.pdf")
+if (replace_plots) jpeg("../Plots/corrplot_CA.jpg") #pdf("../Plots/corrplot_CA.pdf")
 corrplot(cor.CA, method="circle", order="original", p.mat=res.CA[[1]], sig.level=0.05, type="upper", tl.pos="td", , is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
 if (replace_plots) dev.off()
 
-if (replace_plots) pdf("../Plots/corrplot_Chile.pdf")
+if (replace_plots) jpeg("../Plots/corrplot_Chile.jpg") #pdf("../Plots/corrplot_Chile.pdf")
 corrplot(cor.Chile, method="circle", order="original", p.mat=res.Chile[[1]], sig.level=0.05, type="upper", tl.pos="td", is.corr = F, diag=FALSE, cl.lim=c(-0.85, 0.85))
 if (replace_plots) dev.off()
 
@@ -799,7 +802,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-if (replace_plots) pdf("../Plots/Figure_5_trait_relationships.pdf")
+if (replace_plots) jpeg("../Plots/Figure_5_trait_relationships.jpg") #pdf("../Plots/Figure_5_trait_relationships.pdf")
 multiplot(p1, p3, p2, p4, cols=2)
 if (replace_plots) dev.off()
 

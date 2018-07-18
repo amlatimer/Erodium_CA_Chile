@@ -13,7 +13,9 @@ aov.stackbar <- function(a, a.names) { # a is a list of anova models
     dtemp[,i] = SS[1:nfactors]
   }
   par(mar=rep(5, 4), pty="s")
-  barplot(dtemp, ylim=c(0,1), names.arg=a.names, cex.names=1.1, ylab="Proportion variance explained", cex.axis=1.2, cex.lab=1.4, legend.text=c("Population", "Treatment", "Pop x Trmt"), args.legend=list(x="topright", fill=c(gray(0.9), gray(0.7), gray(0.3))))
+  plot.new()
+  pal <- wes_palette("FantasticFox1")
+  barplot(dtemp, ylim=c(0,1), col=pal,  names.arg=a.names, cex.names=1.1, ylab="Proportion variance explained", cex.axis=1.2, cex.lab=1.4, legend.text=c("Population", "Treatment", "Pop x Trmt"), args.legend=list(x="topright"))
 }
 
 
