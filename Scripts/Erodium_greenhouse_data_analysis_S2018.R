@@ -299,8 +299,7 @@ if (replace_tables) write.csv(Q1_results, "../Results/Q1_results.csv")
 ########################################################
 
 ### Figure showing variance explained by treatment, site, interaction
-if (replace_plots) jpeg("../Plots/Figure_2_Anova_barplot.jpg", width=480, height=480) #pdf("../Plots/Figure_2_Anova_barplot.pdf")
-par(mfrow=c(1,1))
+if (replace_plots) pdf("../Plots/Figure_2_Anova_barplot.pdf") #jpeg("../Plots/Figure_2_Anova_barplot.jpg", width=480, height=480) #
 m.d2f <- lm(days_to_flower ~ Site*treatment, data=d.g.fam, na.action = na.exclude)
 m.sl <- lm(gen2_length_longest_stem ~ Site*treatment, data=d.g.fam, na.action = na.exclude)
 m.sla <- lm(SLA ~ Site*treatment, data=d.g.fam, na.action = na.exclude)
@@ -344,13 +343,13 @@ interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, respon
 
 if (replace_plots) dev.off()
 
-if (replace_plots) jpeg("../Plots/Figure_3_reaction_norms_nutrients.jpg")#pdf("../Plots/Figure_3_reaction_norms_nutrients.pdf")
+if (replace_plots) pdf("../Plots/Figure_3_reaction_norms_nutrients.pdf")#jpeg("../Plots/Figure_3_reaction_norms_nutrients.jpg")
 
 # days to flower, plasticity to nutrients 
 if (names(d.g.fam)[1] == "Group.1") d.g.fam = d.g.fam[,-c(1,2)]
 plotdata = filter(d.g.fam, treatment %in% c("high_nut","low_nut"))
 plotdata$treatment = droplevels(plotdata$treatment)
-par(mfrow=c(2,2))
+par(mfrow=c(2,2), mar=c(5,5,5,5))
 # days to flower, plasticity to nutrients 
 interaction.plot(x.factor=plotdata$treatment, trace.factor=plotdata$Site, response=plotdata$days_to_flower, type="b", xlab="Treatment", ylab="Flowering time (days)", cex.axis=axis.scale, cex.lab=axis.scale, legend=FALSE, function(x) mean(x, na.rm = TRUE), pch=16, lty=1, lwd=2, col=cols)
 # stem length, plasticity to nutrients
@@ -727,7 +726,7 @@ d.traits.all = merge(d.traits.all, worldclimdata, by="Site")
 names(d.traits.all)[3] = "region"
 
 p1 = ggplot(d.traits.all, aes(x=log(stem_length_mean), y=days_to_flower_mean, color=region)) + guides(color=FALSE) +
-  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
+  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +   
   scale_colour_hue(l=50) + labs(x="log(Stem_length cm)", y="Flowering time (days)") +
     geom_smooth(method=lm)    # Add linear regression line 
@@ -735,7 +734,7 @@ p1 = ggplot(d.traits.all, aes(x=log(stem_length_mean), y=days_to_flower_mean, co
 
 
 p2 = ggplot(d.traits.all, aes(x=log(SLA_mean), y=days_to_flower_mean, color=region)) + guides(color=FALSE) +
-  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
+  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +   
   scale_colour_hue(l=50) + labs(x="log(SLA mm2/mg)", y="Flowering time (days)") +
   geom_smooth(method=lm)   # Add linear regression line 
@@ -745,7 +744,7 @@ summary(lm(days_to_flower~log(SLA), d.g.fam, na.action = na.exclude))
 # strong relationship between SLA and days to flowering
 
 p3 = ggplot(d.traits.all, aes(x=BIO12, y=log(SLA_mean), color=region)) +
-  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
+  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +     
   geom_point(shape=1) +    # Use hollow circles
   scale_colour_hue(l=50) + labs(x="mean annual precip. (mm)", y="log(SLA mm2/mg)") +
@@ -753,14 +752,14 @@ p3 = ggplot(d.traits.all, aes(x=BIO12, y=log(SLA_mean), color=region)) +
 #  (by default includes 95% confidence region)
 
 p4 = ggplot(d.traits.all, aes(x=BIO12, y=days_to_flower_mean, color=region)) + guides(color=FALSE) +
-  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
+  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +   
   scale_colour_hue(l=50) + labs(x="mean annual precip. (mm)", y="Flowering time (days)") +
   geom_smooth(method=lm, se=T)   # Add linear regression line 
 #  (by default includes 95% confidence region)
 
 p5 = ggplot(d.traits.all, aes(x=soil_pc_CV, y=area_plast_nut, color=region)) + guides(color=FALSE) +
-  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=12), legend.position="none") +
+  theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +   
   scale_colour_hue(l=50) + labs(x="CV soil nutrients", y="leaf area plasticity to nutrients") +
   geom_smooth(method=lm, se=T)   # Add linear regression line 
@@ -802,7 +801,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-if (replace_plots) jpeg("../Plots/Figure_5_trait_relationships.jpg") #pdf("../Plots/Figure_5_trait_relationships.pdf")
+if (replace_plots) pdf("../Plots/Figure_5_trait_relationships.pdf")#jpeg("../Plots/Figure_5_trait_relationships.jpg") #
 multiplot(p1, p3, p2, p4, cols=2)
 if (replace_plots) dev.off()
 
