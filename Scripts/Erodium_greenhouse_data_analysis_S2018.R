@@ -728,7 +728,7 @@ names(d.traits.all)[3] = "region"
 p1 = ggplot(d.traits.all, aes(x=log(stem_length_mean), y=days_to_flower_mean, color=region)) + guides(color=FALSE) +
   theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +   
-  scale_colour_hue(l=50) + labs(x="log(Stem_length cm)", y="Flowering time (days)") +
+  scale_colour_hue(l=50, h=c(10, 250)) + labs(x="log(Stem_length cm)", y="Flowering time (days)") +
     geom_smooth(method=lm)    # Add linear regression line 
 #  (by default includes 95% confidence region)
 
@@ -736,7 +736,7 @@ p1 = ggplot(d.traits.all, aes(x=log(stem_length_mean), y=days_to_flower_mean, co
 p2 = ggplot(d.traits.all, aes(x=log(SLA_mean), y=days_to_flower_mean, color=region)) + guides(color=FALSE) +
   theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +   
-  scale_colour_hue(l=50) + labs(x="log(SLA mm2/mg)", y="Flowering time (days)") +
+  scale_colour_hue(l=50, h=c(10, 250)) + labs(x="log(SLA mm2/mg)", y="Flowering time (days)") +
   geom_smooth(method=lm)   # Add linear regression line 
 #  (by default includes 95% confidence region)
 
@@ -747,21 +747,21 @@ p3 = ggplot(d.traits.all, aes(x=BIO12, y=log(SLA_mean), color=region)) +
   theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +     
   geom_point(shape=1) +    # Use hollow circles
-  scale_colour_hue(l=50) + labs(x="mean annual precip. (mm)", y="log(SLA mm2/mg)") +
+  scale_colour_hue(l=50, h=c(10, 250)) + labs(x="mean annual precip. (mm)", y="log(SLA mm2/mg)") +
   geom_smooth(method=lm)   # Add linear regression line 
 #  (by default includes 95% confidence region)
 
 p4 = ggplot(d.traits.all, aes(x=BIO12, y=days_to_flower_mean, color=region)) + guides(color=FALSE) +
   theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +   
-  scale_colour_hue(l=50) + labs(x="mean annual precip. (mm)", y="Flowering time (days)") +
+  scale_colour_hue(l=50, h=c(10, 250)) + labs(x="mean annual precip. (mm)", y="Flowering time (days)") +
   geom_smooth(method=lm, se=T)   # Add linear regression line 
 #  (by default includes 95% confidence region)
 
 p5 = ggplot(d.traits.all, aes(x=soil_pc_CV, y=area_plast_nut, color=region)) + guides(color=FALSE) +
   theme_bw() + theme(axis.title=element_text(size=16), axis.text=element_text(size=10), legend.position="none") +
   geom_point(shape=16) +   
-  scale_colour_hue(l=50) + labs(x="CV soil nutrients", y="leaf area plasticity to nutrients") +
+  scale_colour_hue(l=50, h=c(10, 250)) + labs(x="CV soil nutrients", y="leaf area plasticity to nutrients") +
   geom_smooth(method=lm, se=T)   # Add linear regression line 
 #  (by default includes 95% confidence region)
 
