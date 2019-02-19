@@ -801,7 +801,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-if (replace_plots) pdf("../Plots/Figure_5_trait_relationships.pdf")#jpeg("../Plots/Figure_5_trait_relationships.jpg") #
+if (replace_plots) jpeg("../Plots/Figure_5_trait_relationships.jpg") #pdf("../Plots/Figure_5_trait_relationships.pdf")#
 multiplot(p1, p3, p2, p4, cols=2)
 if (replace_plots) dev.off()
 
