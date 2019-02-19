@@ -1,5 +1,5 @@
 # Functions for Erodium CA/Chile paper
-# Andrew Latimer April 2017
+# Andrew Latimer
 
 # function to plot results of anova as a stacked bar chart
 aov.stackbar <- function(a, a.names) { # a is a list of anova models
